@@ -49,6 +49,10 @@ public class ObserverManager {
         return shouldTimerRunning;
     }
 
+    public List<Observer> getObserverList(){
+        return observerList;
+    }
+
     public void setOnChangeListener(onStateChangeListener onChangeListener){
         mOnStateChangeListener = onChangeListener;
     }

@@ -21,6 +21,9 @@ public interface TaskDao {
     @Update
     void update(Task task);
 
+    @Update
+    void updateTasks(Task...tasks);
+
     @Delete
     void delete(Task task);
 

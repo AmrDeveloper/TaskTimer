@@ -1,6 +1,8 @@
 package com.amrdeveloper.tasktimer;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -9,8 +11,6 @@ import android.util.Log;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ScheduleManager mScheduleManager;
     private ObserverManager mObserverManager;
+    private TaskViewModel mTaskViewModel;
 
     private static final String TAG = "MainActivity";
 
@@ -35,7 +36,9 @@ public class MainActivity extends AppCompatActivity {
 
         mScheduleManager = new ScheduleManager();
         mObserverManager = new ObserverManager();
+        mTaskViewModel = ViewModelProviders.of(this).get(TaskViewModel.class);
         mObserverManager.setOnChangeListener(onStateChangeListener);
+        mTaskViewModel.getAllTasks().observe(this, taskList -> mTasksAdapter.updateAdapterData(taskList));
     }
 
     private void initLayoutViews(){
@@ -48,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView(){
-        mTasksAdapter = new TaskAdapter(getDummyData());
+        mTasksAdapter = new TaskAdapter();
         mTasksAdapter.setOnTaskClickListener(onTaskClickListener);
 
         mTasksList.setLayoutManager(new LinearLayoutManager(this));
@@ -56,15 +59,6 @@ public class MainActivity extends AppCompatActivity {
         mTasksList.setKeepScreenOn(true);
         mTasksList.setItemAnimator(null);
         mTasksList.setAdapter(mTasksAdapter);
-    }
-
-    private List<Task> getDummyData(){
-        List<Task> tasks = new ArrayList<>();
-        tasks.add(new Task("Developer Compiler",60,false));
-        tasks.add(new Task("Developer OS",3600,false));
-        tasks.add(new Task("Developer Web app",1000,false));
-        tasks.add(new Task("Developer Mob App",500,false));
-        return tasks;
     }
 
     private TaskAdapter.OnTaskClickListener onTaskClickListener = task -> {
@@ -91,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.d(TAG,"Notify Observers");
                     mObserverManager.notifyObservers();
                     //TODO : can improve notify performance by re implement it
+                    //mTaskViewModel.updateTasks((Task) mObserverManager.getObserverList());
                     mTasksAdapter.notifyRunningItems();
                 }
             });
