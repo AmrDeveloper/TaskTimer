@@ -4,4 +4,5 @@
     <string name="add_task_hint">Add Task Title</string>
     <string name="save">Save</string>
     <string name="add_task">Add Task</string>
+    <string name="delete_all">Delete All</string>
 </resources>

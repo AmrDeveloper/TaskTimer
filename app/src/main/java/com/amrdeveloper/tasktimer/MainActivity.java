@@ -1,14 +1,19 @@
 package com.amrdeveloper.tasktimer;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -43,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
         mTaskViewModel.getAllTasks().observe(this, taskList -> {
             mTasksAdapter.updateAdapterData(taskList);
         });
+
+        setupItemTouchHelper();
     }
 
     private void initLayoutViews(){
@@ -64,6 +71,48 @@ public class MainActivity extends AppCompatActivity {
         mTasksList.setKeepScreenOn(true);
         mTasksList.setItemAnimator(null);
         mTasksList.setAdapter(mTasksAdapter);
+    }
+
+    private void setupItemTouchHelper(){
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(
+                0,ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                int itemPosition = viewHolder.getAdapterPosition();
+                Task task = mTasksAdapter.getTaskAt(itemPosition);
+
+                //Remove this task from ObserverManager to stop schedule it
+                mObserverManager.removeObserver(task);
+
+                //Remove this task from Database
+                mTaskViewModel.delete(task);
+            }
+        }).attachToRecyclerView(mTasksList);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.main_activity_menu,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.deleteAllMenu:
+                mTaskViewModel.deleteAll();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override

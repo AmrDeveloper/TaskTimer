@@ -62,6 +62,10 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         }
     }
 
+    public Task getTaskAt(int position){
+        return mTasksList.get(position);
+    }
+
     public void notifyRunningItems(){
         for(int i = 0 ; i < mTasksList.size() ; i++)
             if(mTasksList.get(i).isRunning())
