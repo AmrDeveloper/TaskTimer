@@ -1,13 +1,13 @@
 package com.amrdeveloper.tasktimer;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -19,10 +19,10 @@ public class MainActivity extends AppCompatActivity {
     private FloatingActionButton mNewTaskFab;
 
     private TaskAdapter mTasksAdapter;
+    private TaskViewModel mTaskViewModel;
 
     private ScheduleManager mScheduleManager;
     private ObserverManager mObserverManager;
-    private TaskViewModel mTaskViewModel;
 
     private static final String TAG = "MainActivity";
 
@@ -38,7 +38,9 @@ public class MainActivity extends AppCompatActivity {
         mObserverManager = new ObserverManager();
         mTaskViewModel = ViewModelProviders.of(this).get(TaskViewModel.class);
         mObserverManager.setOnChangeListener(onStateChangeListener);
-        mTaskViewModel.getAllTasks().observe(this, taskList -> mTasksAdapter.updateAdapterData(taskList));
+        mTaskViewModel.getAllTasks().observe(this, taskList -> {
+            mTasksAdapter.updateAdapterData(taskList);
+        });
     }
 
     private void initLayoutViews(){

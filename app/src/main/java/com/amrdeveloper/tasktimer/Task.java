@@ -18,7 +18,11 @@ public class Task implements Observer {
         this.isRunning = isRunning;
     }
 
-    public int getTaskId(){
+    public void setId(int id){
+        this.id = id;
+    }
+
+    public int getId(){
         return id;
     }
 

@@ -56,9 +56,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     }
 
     public void updateAdapterData(List<Task> taskList){
-        if(taskList != null && taskList.isEmpty()){
-            mTasksList.clear();
-            mTasksList.addAll(taskList);
+        if(taskList != null){
+            this.mTasksList = taskList;
             notifyDataSetChanged();
         }
     }
