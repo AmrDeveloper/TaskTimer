@@ -11,7 +11,7 @@ public class ScheduleManager {
     private volatile boolean isTimerRunning;
     private Timer timer;
 
-    public void runTimer(TimerTask timerTask) {
+    public void startTaskSchedule(TimerTask timerTask) {
         if (!isTimerRunning) {
             timer = new Timer();
             isTimerRunning = true;
@@ -19,7 +19,7 @@ public class ScheduleManager {
         timer.scheduleAtFixedRate(timerTask, DELAY, PERIOD);
     }
 
-    public void stopTimer() {
+    public void stopTaskSchedule() {
         if(isTimerRunning){
             isTimerRunning = false;
             timer.cancel();

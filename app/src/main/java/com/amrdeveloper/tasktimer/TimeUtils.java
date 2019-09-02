@@ -8,7 +8,7 @@ public class TimeUtils {
         short SECOND_IN_HOUR = 3600;
         short SECOND_IN_MINUTE = 60;
         long hours = 0;
-        short minutes = 0;
+        byte minutes = 0;
 
         if (totalSeconds >= SECOND_IN_HOUR) {
             long round = totalSeconds % SECOND_IN_HOUR;
@@ -18,7 +18,7 @@ public class TimeUtils {
 
         if (totalSeconds >= SECOND_IN_MINUTE) {
             long round = totalSeconds % SECOND_IN_MINUTE;
-            minutes = (short)((totalSeconds - round) / SECOND_IN_MINUTE);
+            minutes = (byte)((totalSeconds - round) / SECOND_IN_MINUTE);
             totalSeconds = totalSeconds - (totalSeconds - round);
         }
 

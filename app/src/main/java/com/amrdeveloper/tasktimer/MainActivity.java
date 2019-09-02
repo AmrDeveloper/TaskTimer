@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
         mTasksList.setLayoutManager(layoutManager);
 
         mTasksList.setHasFixedSize(true);
+        mTasksList.setItemAnimator(null);
 
         mTasksAdapter = new TaskAdapter(tasks);
         mTasksAdapter.setOnTaskClickListener(onTaskClickListener);
@@ -79,10 +80,10 @@ public class MainActivity extends AppCompatActivity {
     private ObserverManager.onStateChangeListener onStateChangeListener = isEmpty -> {
         if(isEmpty){
             Log.d(TAG,"Stop Timer");
-            mScheduleManager.stopTimer();
+            mScheduleManager.stopTaskSchedule();
         }else{
             Log.d(TAG,"Run Timer");
-            mScheduleManager.runTimer(new TimerTask() {
+            mScheduleManager.startTaskSchedule(new TimerTask() {
                 @Override
                 public void run() {
                     Log.d(TAG,"Notify Observers");
