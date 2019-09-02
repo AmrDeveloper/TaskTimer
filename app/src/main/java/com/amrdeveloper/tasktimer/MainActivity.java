@@ -1,13 +1,14 @@
 package com.amrdeveloper.tasktimer;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -25,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private ObserverManager mObserverManager;
 
     private static final String TAG = "MainActivity";
+    private static final int ADD_TASK_REQUEST = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +50,8 @@ public class MainActivity extends AppCompatActivity {
         mNewTaskFab = findViewById(R.id.newTaskFab);
 
         mNewTaskFab.setOnClickListener(view -> {
-            //TODO : Add new Task Dialog or Activity
+            Intent intent = new Intent(MainActivity.this,AddTaskActivity.class);
+            startActivityForResult(intent,ADD_TASK_REQUEST);
         });
     }
 
@@ -61,6 +64,18 @@ public class MainActivity extends AppCompatActivity {
         mTasksList.setKeepScreenOn(true);
         mTasksList.setItemAnimator(null);
         mTasksList.setAdapter(mTasksAdapter);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == ADD_TASK_REQUEST && resultCode == RESULT_OK){
+           String title = data.getStringExtra(Constant.EXTRA_TITLE);
+
+           Task task = new Task(title,0,false);
+
+           mTaskViewModel.insert(task);
+        }
     }
 
     private TaskAdapter.OnTaskClickListener onTaskClickListener = task -> {
