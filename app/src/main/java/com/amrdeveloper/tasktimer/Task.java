@@ -1,7 +1,13 @@
 package com.amrdeveloper.tasktimer;
 
-public class Task implements Observer{
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
+@Entity(tableName = "tasks_table")
+public class Task implements Observer {
+
+    @PrimaryKey(autoGenerate = true)
+    private int id;
     private String title;
     private long timeInSec;
     private boolean isRunning;
@@ -10,6 +16,10 @@ public class Task implements Observer{
         this.title = title;
         this.timeInSec = timeInSec;
         this.isRunning = isRunning;
+    }
+
+    public int getTaskId(){
+        return id;
     }
 
     public String getTitle() {

@@ -48,21 +48,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView(){
+        mTasksAdapter = new TaskAdapter(getDummyData());
+        mTasksAdapter.setOnTaskClickListener(onTaskClickListener);
+
+        mTasksList.setLayoutManager(new LinearLayoutManager(this));
+        mTasksList.setHasFixedSize(true);
+        mTasksList.setKeepScreenOn(true);
+        mTasksList.setItemAnimator(null);
+        mTasksList.setAdapter(mTasksAdapter);
+    }
+
+    private List<Task> getDummyData(){
         List<Task> tasks = new ArrayList<>();
         tasks.add(new Task("Developer Compiler",60,false));
         tasks.add(new Task("Developer OS",3600,false));
         tasks.add(new Task("Developer Web app",1000,false));
         tasks.add(new Task("Developer Mob App",500,false));
-
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        mTasksList.setLayoutManager(layoutManager);
-
-        mTasksList.setHasFixedSize(true);
-        mTasksList.setItemAnimator(null);
-
-        mTasksAdapter = new TaskAdapter(tasks);
-        mTasksAdapter.setOnTaskClickListener(onTaskClickListener);
-        mTasksList.setAdapter(mTasksAdapter);
+        return tasks;
     }
 
     private TaskAdapter.OnTaskClickListener onTaskClickListener = task -> {
