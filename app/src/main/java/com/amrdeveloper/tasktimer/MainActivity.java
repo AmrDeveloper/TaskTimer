@@ -17,6 +17,7 @@ import android.view.MenuItem;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.List;
 import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
@@ -46,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         mTaskViewModel = ViewModelProviders.of(this).get(TaskViewModel.class);
         mObserverManager.setOnChangeListener(onStateChangeListener);
         mTaskViewModel.getAllTasks().observe(this, taskList -> {
-            mTasksAdapter.updateAdapterData(taskList);
+            mTasksAdapter.submitList(taskList);
         });
 
         setupItemTouchHelper();
@@ -150,11 +151,17 @@ public class MainActivity extends AppCompatActivity {
                 public void run() {
                     Log.d(TAG,"Notify Observers");
                     mObserverManager.notifyObservers();
-                    //TODO : can improve notify performance by re implement it
-                    //mTaskViewModel.updateTasks((Task) mObserverManager.getObserverList());
+
                     mTasksAdapter.notifyRunningItems();
                 }
             });
         }
     };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        List<Task> currentList = mTasksAdapter.getCurrentList();
+        mTaskViewModel.updateTasks(currentList.toArray(new Task[currentList.size()]));
+    }
 }

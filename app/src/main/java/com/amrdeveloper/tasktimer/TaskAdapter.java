@@ -7,14 +7,18 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder>{
 
-    private List<Task> mTasksList;
+public class TaskAdapter extends ListAdapter<Task,TaskAdapter.TaskViewHolder> {
+
+    public TaskAdapter() {
+        super(DIFF_CALLBACK);
+    }
 
     @FunctionalInterface
     public interface OnTaskClickListener{
@@ -22,14 +26,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     }
 
     private OnTaskClickListener mOnTaskClickListener;
-
-    public TaskAdapter(){
-        mTasksList = new ArrayList<>();
-    }
-
-    public TaskAdapter(List<Task> taskList){
-        mTasksList = taskList;
-    }
 
     @NonNull
     @Override
@@ -44,37 +40,41 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
-         Task currentTask = mTasksList.get(position);
+         Task currentTask = getItem(position);
          if(currentTask != null){
              holder.bindTask(currentTask);
          }
     }
 
-    @Override
-    public int getItemCount() {
-        return mTasksList.size();
-    }
-
-    public void updateAdapterData(List<Task> taskList){
-        if(taskList != null){
-            this.mTasksList = taskList;
-            notifyDataSetChanged();
+    public void notifyRunningItems(){
+        List<Task> currentList = getCurrentList();
+        int size = currentList.size();
+        for(int i = 0 ; i < size ; i++){
+            if(currentList.get(i).isRunning()){
+                notifyItemChanged(i);
+            }
         }
     }
 
     public Task getTaskAt(int position){
-        return mTasksList.get(position);
-    }
-
-    public void notifyRunningItems(){
-        for(int i = 0 ; i < mTasksList.size() ; i++)
-            if(mTasksList.get(i).isRunning())
-                notifyItemChanged(i);
+        return getItem(position);
     }
 
     public void setOnTaskClickListener(OnTaskClickListener listener){
         mOnTaskClickListener = listener;
     }
+
+    private static final DiffUtil.ItemCallback<Task> DIFF_CALLBACK = new DiffUtil.ItemCallback<Task>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull Task oldItem, @NonNull Task newItem) {
+            return oldItem.getId() == newItem.getId();
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull Task oldItem, @NonNull Task newItem) {
+            return oldItem.getTitle().equals(newItem.getTitle());
+        }
+    };
 
     class TaskViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
@@ -101,7 +101,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         public void onClick(View view) {
            if(mOnTaskClickListener != null){
                int clickedPosition = getAdapterPosition();
-               mOnTaskClickListener.onTaskClicked(mTasksList.get(clickedPosition));
+               mOnTaskClickListener.onTaskClicked(getItem(clickedPosition));
            }
         }
     }
