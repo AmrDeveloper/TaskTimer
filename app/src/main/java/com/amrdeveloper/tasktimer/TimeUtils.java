@@ -22,6 +22,6 @@ public class TimeUtils {
             totalSeconds = totalSeconds - (totalSeconds - round);
         }
 
-        return String.format(Locale.ENGLISH,"%d : %d : %d", hours, minutes, totalSeconds);
+        return String.format(Locale.ENGLISH,"%d : %02d : %02d", hours, minutes, totalSeconds);
     }
 }
