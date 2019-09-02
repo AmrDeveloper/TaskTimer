@@ -2,4 +2,6 @@
 <resources>
     <dimen name="dimen5dp">5dp</dimen>
     <dimen name="dimen10dp">10dp</dimen>
+    <dimen name="dimen16dp">16dp</dimen>
+    <dimen name="dimen56dp">56dp</dimen>
 </resources>

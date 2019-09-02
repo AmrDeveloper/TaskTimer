@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/dimen5dp"
-    android:orientation="vertical">
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:divider="@android:color/transparent"
+    android:dividerHeight="0.0px"
+    android:orientation="vertical"
+    card_view:cardElevation="@dimen/dimen10dp"
+    card_view:cardPreventCornerOverlap="false">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -25,6 +32,7 @@
             android:layout_below="@id/taskTitle"
             android:gravity="end"
             android:padding="@dimen/dimen10dp"
+            android:textColor="@color/crimson"
             tools:text="00:00:00" />
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

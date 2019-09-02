@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">TaskTimer</string>
+    <string name="no_task_msg">You have no task yet</string>
 </resources>

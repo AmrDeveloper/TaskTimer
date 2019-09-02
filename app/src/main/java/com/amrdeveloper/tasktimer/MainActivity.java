@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimerTask;
@@ -14,6 +16,8 @@ import java.util.TimerTask;
 public class MainActivity extends AppCompatActivity {
 
     private RecyclerView mTasksList;
+    private FloatingActionButton mNewTaskFab;
+
     private TaskAdapter mTasksAdapter;
 
     private ScheduleManager mScheduleManager;
@@ -36,6 +40,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void initLayoutViews(){
         mTasksList = findViewById(R.id.tasksList);
+        mNewTaskFab = findViewById(R.id.newTaskFab);
+
+        mNewTaskFab.setOnClickListener(view -> {
+            //TODO : Add new Task Dialog or Activity
+        });
     }
 
     private void setupRecyclerView(){
@@ -71,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
         if(isEmpty){
             Log.d(TAG,"Stop Timer");
             mScheduleManager.stopTimer();
-
         }else{
             Log.d(TAG,"Run Timer");
             mScheduleManager.runTimer(new TimerTask() {
@@ -79,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
                 public void run() {
                     Log.d(TAG,"Notify Observers");
                     mObserverManager.notifyObservers();
+                    //TODO : can improve notify performance by re implement it
                     mTasksAdapter.notifyRunningItems();
                 }
             });
