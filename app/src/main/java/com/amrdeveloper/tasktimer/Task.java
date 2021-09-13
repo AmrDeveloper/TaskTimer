@@ -51,7 +51,7 @@ public class Task implements Observer {
     }
 
     @Override
-    public void observe() {
+    public void update() {
         this.timeInSec++;
     }
 }

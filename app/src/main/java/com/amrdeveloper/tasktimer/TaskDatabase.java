@@ -29,7 +29,7 @@ public abstract class TaskDatabase extends RoomDatabase {
         return instance;
     }
 
-    private static RoomDatabase.Callback roomCallback = new RoomDatabase.Callback() {
+    private static final RoomDatabase.Callback roomCallback = new RoomDatabase.Callback() {
 
         @Override
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
@@ -40,7 +40,7 @@ public abstract class TaskDatabase extends RoomDatabase {
 
     private static class FirstInsertAsyncTask extends AsyncTask<Void, Void, Void> {
 
-        private TaskDao taskDao;
+        private final TaskDao taskDao;
 
         private FirstInsertAsyncTask(TaskDatabase taskDao) {
             this.taskDao = taskDao.tasksDao();

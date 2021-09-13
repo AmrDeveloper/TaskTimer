@@ -14,14 +14,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 
-public class TaskAdapter extends ListAdapter<Task,TaskAdapter.TaskViewHolder> {
+public class TaskAdapter extends ListAdapter<Task, TaskAdapter.TaskViewHolder> {
 
     public TaskAdapter() {
         super(DIFF_CALLBACK);
     }
 
     @FunctionalInterface
-    public interface OnTaskClickListener{
+    public interface OnTaskClickListener {
         void onTaskClicked(Task task);
     }
 
@@ -40,27 +40,27 @@ public class TaskAdapter extends ListAdapter<Task,TaskAdapter.TaskViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
-         Task currentTask = getItem(position);
-         if(currentTask != null){
-             holder.bindTask(currentTask);
-         }
+        Task currentTask = getItem(position);
+        if (currentTask != null) {
+            holder.bindTask(currentTask);
+        }
     }
 
-    public void notifyRunningItems(){
+    public void notifyRunningItems() {
         List<Task> currentList = getCurrentList();
         int size = currentList.size();
-        for(int i = 0 ; i < size ; i++){
-            if(currentList.get(i).isRunning()){
+        for (int i = 0; i < size; i++) {
+            if (currentList.get(i).isRunning()) {
                 notifyItemChanged(i);
             }
         }
     }
 
-    public Task getTaskAt(int position){
+    public Task getTaskAt(int position) {
         return getItem(position);
     }
 
-    public void setOnTaskClickListener(OnTaskClickListener listener){
+    public void setOnTaskClickListener(OnTaskClickListener listener) {
         mOnTaskClickListener = listener;
     }
 
@@ -76,7 +76,7 @@ public class TaskAdapter extends ListAdapter<Task,TaskAdapter.TaskViewHolder> {
         }
     };
 
-    class TaskViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    class TaskViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView mTaskTitle;
         private TextView mTaskTimer;
@@ -87,22 +87,22 @@ public class TaskAdapter extends ListAdapter<Task,TaskAdapter.TaskViewHolder> {
             itemView.setOnClickListener(this);
         }
 
-        private void initViews(View view){
+        private void initViews(View view) {
             mTaskTitle = view.findViewById(R.id.taskTitle);
             mTaskTimer = view.findViewById(R.id.taskTimer);
         }
 
-        private void bindTask(Task task){
+        private void bindTask(Task task) {
             mTaskTitle.setText(task.getTitle());
             mTaskTimer.setText(TimeUtils.formatSecondsToTime(task.getTimeInSec()));
         }
 
         @Override
         public void onClick(View view) {
-           if(mOnTaskClickListener != null){
-               int clickedPosition = getAdapterPosition();
-               mOnTaskClickListener.onTaskClicked(getItem(clickedPosition));
-           }
+            if (mOnTaskClickListener != null) {
+                int clickedPosition = getAdapterPosition();
+                mOnTaskClickListener.onTaskClicked(getItem(clickedPosition));
+            }
         }
     }
 }

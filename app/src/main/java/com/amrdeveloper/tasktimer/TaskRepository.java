@@ -9,8 +9,8 @@ import java.util.List;
 
 public class TaskRepository {
 
-    private TaskDao taskDao;
-    private LiveData<List<Task>> allTasks;
+    private final TaskDao taskDao;
+    private final LiveData<List<Task>> allTasks;
 
     public TaskRepository(Application application){
         TaskDatabase database = TaskDatabase.getInstance(application);
@@ -45,7 +45,7 @@ public class TaskRepository {
 
     private static class InsertLoadAsyncTask extends AsyncTask<Task,Void,Void>{
 
-        private TaskDao taskDao;
+        private final TaskDao taskDao;
 
         private InsertLoadAsyncTask(TaskDao taskDao){
             this.taskDao = taskDao;

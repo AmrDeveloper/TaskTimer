@@ -140,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    private ObserverManager.onStateChangeListener onStateChangeListener = isEmpty -> {
+    private ObserverManager.OnStateChangeListener onStateChangeListener = isEmpty -> {
         if(isEmpty){
             Log.d(TAG,"Stop Timer");
             mScheduleManager.stopTaskSchedule();
