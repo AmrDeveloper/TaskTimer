@@ -23,7 +23,6 @@ import java.util.TimerTask;
 public class MainActivity extends AppCompatActivity {
 
     private RecyclerView mTasksList;
-    private FloatingActionButton mNewTaskFab;
 
     private TaskAdapter mTasksAdapter;
     private TaskViewModel mTaskViewModel;
@@ -55,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initLayoutViews(){
         mTasksList = findViewById(R.id.tasksList);
-        mNewTaskFab = findViewById(R.id.newTaskFab);
+        FloatingActionButton mNewTaskFab = findViewById(R.id.newTaskFab);
 
         mNewTaskFab.setOnClickListener(view -> {
             Intent intent = new Intent(MainActivity.this,AddTaskActivity.class);
@@ -85,13 +84,9 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                int itemPosition = viewHolder.getAdapterPosition();
+                int itemPosition = viewHolder.getBindingAdapterPosition();
                 Task task = mTasksAdapter.getTaskAt(itemPosition);
-
-                //Remove this task from ObserverManager to stop schedule it
                 mObserverManager.removeObserver(task);
-
-                //Remove this task from Database
                 mTaskViewModel.delete(task);
             }
         }).attachToRecyclerView(mTasksList);
@@ -106,29 +101,24 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.deleteAllMenu:
-                mTaskViewModel.deleteAll();
-                return true;
-
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.deleteAllMenu) {
+            mTaskViewModel.deleteAll();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == ADD_TASK_REQUEST && resultCode == RESULT_OK){
+        if(requestCode == ADD_TASK_REQUEST && resultCode == RESULT_OK && data != null){
            String title = data.getStringExtra(Constant.EXTRA_TITLE);
-
            Task task = new Task(title,0,false);
-
            mTaskViewModel.insert(task);
         }
     }
 
-    private TaskAdapter.OnTaskClickListener onTaskClickListener = task -> {
+    private final TaskAdapter.OnTaskClickListener onTaskClickListener = task -> {
         if(task.isRunning()){
             mObserverManager.removeObserver(task);
             task.setRunning(false);
@@ -140,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    private ObserverManager.OnStateChangeListener onStateChangeListener = isEmpty -> {
+    private final ObserverManager.OnStateChangeListener onStateChangeListener = isEmpty -> {
         if(isEmpty){
             Log.d(TAG,"Stop Timer");
             mScheduleManager.stopTaskSchedule();
@@ -151,7 +141,6 @@ public class MainActivity extends AppCompatActivity {
                 public void run() {
                     Log.d(TAG,"Notify Observers");
                     mObserverManager.notifyObservers();
-
                     mTasksAdapter.notifyRunningItems();
                 }
             });
@@ -162,6 +151,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         List<Task> currentList = mTasksAdapter.getCurrentList();
-        mTaskViewModel.updateTasks(currentList.toArray(new Task[currentList.size()]));
+        Task[] tasks = new Task[currentList.size()];
+        mTaskViewModel.updateTasks(currentList.toArray(tasks));
     }
 }

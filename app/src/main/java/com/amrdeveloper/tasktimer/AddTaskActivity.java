@@ -11,6 +11,8 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.Objects;
+
 public class AddTaskActivity extends AppCompatActivity {
 
     private EditText editTaskTitle;
@@ -22,7 +24,7 @@ public class AddTaskActivity extends AppCompatActivity {
 
         initLayoutViews();
 
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_vector);
+        Objects.requireNonNull(getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_close_vector);
     }
 
     private void initLayoutViews() {
@@ -38,13 +40,11 @@ public class AddTaskActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.saveTask:
-                saveNewTask();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.saveTask) {
+            saveNewTask();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     private void saveNewTask() {
@@ -54,12 +54,9 @@ public class AddTaskActivity extends AppCompatActivity {
             return;
         }
 
-        //Send data back to Main activity to save it using TaskViewModel
         Intent data = new Intent();
         data.putExtra(Constant.EXTRA_TITLE, taskTitle);
-
         setResult(RESULT_OK, data);
-
         finish();
     }
 }
