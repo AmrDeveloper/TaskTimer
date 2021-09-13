@@ -3,7 +3,7 @@ Android Application to find how many time your project take
 
 MVVM Architecture with Room Database
 
-Run any number of Timers in same Thread using Observer Design Pattern
+The goal of this project is to Run any number of Timers in the same Thread using Observer Design Pattern
 
 ## Screenshots
 
